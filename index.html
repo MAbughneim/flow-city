@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Flow City</title>
+
+<style>
+body{
+    margin:0;
+    background:#0d1117;
+    color:white;
+    font-family:Arial;
+    overflow:hidden;
+}
+
+h1{
+    text-align:center;
+    margin-top:20px;
+}
+
+.city{
+    position:relative;
+    width:100%;
+    height:90vh;
+    background:linear-gradient(#1a2332,#0d1117);
+}
+
+.building{
+    position:absolute;
+    width:150px;
+    height:200px;
+    background:#2f81f7;
+    border-radius:10px;
+    text-align:center;
+    padding-top:20px;
+    font-weight:bold;
+    box-shadow:0 0 20px #2f81f7;
+}
+
+#tm{
+    left:100px;
+    top:200px;
+}
+
+#approval{
+    right:100px;
+    top:200px;
+}
+
+.truck{
+    position:absolute;
+    width:60px;
+    height:30px;
+    background:orange;
+    bottom:80px;
+    left:0;
+    border-radius:5px;
+    animation:drive 12s linear infinite;
+}
+
+@keyframes drive{
+    from{left:-100px;}
+    to{left:100%;}
+}
+</style>
+</head>
+
+<body>
+
+<h1>🏙️ Flow City</h1>
+
+<div class="city">
+
+<div id="tm" class="building">
+T&M Flow
+</div>
+
+<div id="approval" class="building">
+Approvals
+</div>
+
+<div class="truck"></div>
+
+</div>
+
+</body>
+</html>
