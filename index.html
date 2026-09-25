@@ -1,274 +1,159 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Flow City</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flow City v2</title>
 
 <style>
+
 body{
     margin:0;
-    background:#0d1117;
-    color:white;
-    font-family:Arial;
+    background:#050816;
     overflow:hidden;
+    color:white;
+    font-family:Segoe UI;
 }
 
-h1{
-    text-align:center;
-    margin-top:20px;
+.header{
+    height:70px;
+    background:#08111f;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:34px;
+    font-weight:bold;
+    color:#00ffff;
+    box-shadow:0 0 20px #00ffff;
 }
 
 .city{
     position:relative;
-    width:100%;
-    height:90vh;
-    background:linear-gradient(#1a2332,#0d1117);
+    width:100vw;
+    height:calc(100vh - 70px);
 }
+
+/* Buildings */
 
 .building{
     position:absolute;
-    width:150px;
-    height:200px;
-    background:#2f81f7;
     border-radius:10px;
     text-align:center;
-    padding-top:20px;
+    padding-top:15px;
     font-weight:bold;
-    box-shadow:0 0 20px #2f81f7;
+    box-shadow:0 0 25px currentColor;
 }
 
 #tm{
     left:100px;
-    top:200px;
-}
-
-#approval{
-    right:100px;
-    top:200px;
-}
-
-.truck{
-    position:absolute;
-    width:60px;
-    height:30px;
-    background:orange;
-    bottom:80px;
-    left:0;
-    border-radius:5px;
-    animation:drive 12s linear infinite;
-}
-
-@keyframes drive{
-    from{left:-100px;}
-    to{left:100%;}
-}
-    <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Flow City Cyber Edition</title>
-
-<style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
-    font-family:Segoe UI;
-    background:#050816;
-    overflow:hidden;
-    color:white;
-}
-
-/* Header */
-
-.header{
-    height:80px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:38px;
-    font-weight:bold;
-    background:#08111f;
-    border-bottom:2px solid #00ffff;
-    box-shadow:0 0 20px #00ffff;
-}
-
-/* City */
-
-.city{
-    width:100vw;
-    height:calc(100vh - 80px);
-    position:relative;
-    background:
-      radial-gradient(circle at top,#142c4d,#050816);
-}
-
-/* Buildings */
-
-.building{
-    position:absolute;
-    border-radius:10px;
-    text-align:center;
-    padding-top:10px;
-    color:white;
-    font-weight:bold;
-
-    animation:pulse 2s infinite;
-}
-
-@keyframes pulse{
-    50%{
-        transform:translateY(-5px);
-    }
-}
-
-.building::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    border-radius:10px;
-    box-shadow:0 0 25px currentColor;
-}
-
-/* Buildings */
-
-.tm{
-    width:180px;
-    height:250px;
-    left:80px;
     top:180px;
+    width:160px;
+    height:220px;
     background:#1d4ed8;
     color:#00ffff;
 }
 
-.material{
+#warehouse{
+    left:450px;
+    top:220px;
     width:180px;
-    height:220px;
-    left:340px;
-    top:250px;
+    height:180px;
     background:#14532d;
     color:#00ff88;
 }
 
-.ai{
-    width:180px;
-    height:280px;
-    left:600px;
-    top:150px;
-    background:#4c1d95;
-    color:#ff00ff;
-}
-
-.approvals{
-    width:180px;
-    height:260px;
-    right:330px;
+#approval{
+    left:850px;
     top:170px;
+    width:180px;
+    height:250px;
     background:#7c2d12;
-    color:#ff8800;
+    color:#ffaa00;
 }
 
-.reporting{
-    width:180px;
-    height:240px;
-    right:80px;
+#report{
+    left:1250px;
     top:200px;
+    width:180px;
+    height:200px;
     background:#991b1b;
     color:#ff4444;
 }
 
-/* Control Center */
+/* Road */
+
+.road{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:180px;
+    height:100px;
+    background:#222;
+}
+
+.line{
+    position:absolute;
+    top:45px;
+    width:100%;
+    border-top:6px dashed yellow;
+}
+
+/* Truck */
+
+#truck{
+    position:absolute;
+    width:70px;
+    height:40px;
+    background:cyan;
+    border-radius:8px;
+    bottom:210px;
+    left:120px;
+    box-shadow:0 0 20px cyan;
+    transition:all 3s linear;
+}
+
+/* Cargo */
+
+#box{
+    position:absolute;
+    width:30px;
+    height:30px;
+    background:orange;
+    display:none;
+}
+
+/* Log */
+
+.panel{
+    position:absolute;
+    right:20px;
+    top:100px;
+    width:300px;
+    height:350px;
+    background:rgba(0,0,0,.5);
+    border:1px solid cyan;
+    padding:15px;
+    overflow:auto;
+}
+
+.panel h3{
+    color:cyan;
+}
+
+.log{
+    margin-bottom:10px;
+}
 
 .control{
     position:absolute;
     left:50%;
     transform:translateX(-50%);
-    bottom:40px;
-
-    width:300px;
-    height:150px;
-
-    border:2px solid #00ffff;
-    border-radius:20px;
-
-    text-align:center;
-    padding-top:20px;
-
-    background:rgba(0,0,0,.4);
-
-    box-shadow:0 0 30px #00ffff;
-}
-
-/* Hover Truck */
-
-.truck{
-    width:60px;
-    height:30px;
-
-    position:absolute;
-
-    bottom:220px;
-
-    background:#00ffff;
-
-    border-radius:10px;
-
-    box-shadow:0 0 25px #00ffff;
-
-    animation:drive 12s linear infinite;
-}
-
-@keyframes drive{
-    from{
-        left:-100px;
-    }
-
-    to{
-        left:110%;
-    }
-}
-
-/* Activity Panel */
-
-.panel{
-    position:absolute;
-
-    right:20px;
     bottom:20px;
-
-    width:300px;
-    height:250px;
-
-    background:rgba(0,0,0,.5);
-
-    border:1px solid #00ffff;
-
-    padding:15px;
-
-    box-shadow:0 0 20px #00ffff;
-}
-
-.panel h3{
-    color:#00ffff;
-    margin-bottom:10px;
-}
-
-.log{
-    margin-bottom:8px;
-    color:#ddd;
-}
-
-/* Stars */
-
-.star{
-    position:absolute;
-    width:3px;
-    height:3px;
-    background:white;
-    border-radius:50%;
+    width:350px;
+    padding:20px;
+    text-align:center;
+    border:1px solid cyan;
+    box-shadow:0 0 20px cyan;
 }
 
 </style>
@@ -277,96 +162,128 @@ body{
 <body>
 
 <div class="header">
-🌆 FLOW CITY CYBER EDITION
+🏙 FLOW CITY V2
 </div>
 
 <div class="city">
 
-<div class="building tm">
+<div id="tm" class="building">
 T&M FLOW
 </div>
 
-<div class="building material">
-MATERIALS
+<div id="warehouse" class="building">
+WAREHOUSE
 </div>
 
-<div class="building ai">
-AI AGENTS
+<div id="approval" class="building">
+APPROVAL TOWER
 </div>
 
-<div class="building approvals">
-APPROVALS
+<div id="report" class="building">
+REPORT CENTER
 </div>
 
-<div class="building reporting">
-REPORTING
+<div class="road">
+<div class="line"></div>
+</div>
+
+<div id="truck">🚚</div>
+<div id="box"></div>
+
+<div class="panel">
+<h3>LIVE ACTIVITY</h3>
+<div id="logs"></div>
 </div>
 
 <div class="control">
 <h2>CONTROL CENTER</h2>
-<br>
-Active Flows: 3
-<br><br>
-System Status: ✅ Online
-</div>
-
-<div class="truck"></div>
-
-<div class="panel">
-<h3>LIVE ACTIVITY</h3>
-
-<div class="log">08:58 T&M Started</div>
-<div class="log">08:59 Materials Updated</div>
-<div class="log">09:00 Approval Triggered</div>
-<div class="log">09:01 AI Agent Running</div>
-<div class="log">09:02 Report Generated</div>
+<div id="status">Waiting...</div>
 </div>
 
 </div>
 
 <script>
 
-/* create stars */
+const truck=document.getElementById("truck");
+const logs=document.getElementById("logs");
+const status=document.getElementById("status");
+const box=document.getElementById("box");
 
-for(let i=0;i<120;i++){
+function log(message){
 
-let star=document.createElement('div');
+const item=document.createElement("div");
+item.className="log";
 
-star.className='star';
+const time=new Date().toLocaleTimeString();
 
-star.style.left=Math.random()*100+'vw';
+item.innerHTML=time + " - " + message;
 
-star.style.top=Math.random()*100+'vh';
-
-document.body.appendChild(star);
+logs.prepend(item);
 
 }
 
+function sleep(ms){
+return new Promise(resolve=>setTimeout(resolve,ms));
+}
+
+async function runFlow(){
+
+status.innerHTML="T&M Flow Started";
+log("T&M Flow Started");
+
+truck.style.left="120px";
+
+await sleep(2000);
+
+status.innerHTML="Driving to Warehouse";
+log("Driving to Warehouse");
+
+truck.style.left="500px";
+
+await sleep(3500);
+
+status.innerHTML="Loading Materials";
+log("Loading Materials");
+
+box.style.display="block";
+box.style.left="560px";
+box.style.top="420px";
+
+await sleep(2000);
+
+box.style.display="none";
+
+status.innerHTML="Driving to Approval Tower";
+log("Driving to Approval Tower");
+
+truck.style.left="900px";
+
+await sleep(3500);
+
+status.innerHTML="Approval Processing";
+log("Approval Processing");
+
+await sleep(2000);
+
+status.innerHTML="Driving to Report Center";
+log("Driving to Report Center");
+
+truck.style.left="1300px";
+
+await sleep(3500);
+
+status.innerHTML="Report Delivered ✅";
+log("Report Delivered ✅");
+
+await sleep(3000);
+
+runFlow();
+
+}
+
+runFlow();
+
 </script>
-
-</body>
-</html>
-
-</style>
-</head>
-
-<body>
-
-<h1>🏙️ Flow City</h1>
-
-<div class="city">
-
-<div id="tm" class="building">
-T&M Flow
-</div>
-
-<div id="approval" class="building">
-Approvals
-</div>
-
-<div class="truck"></div>
-
-</div>
 
 </body>
 </html>
