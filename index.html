@@ -4,601 +4,1563 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Flow City - Power Automate Simulation</title>
+<title>Flow City</title>
 
 <style>
-* {
-    box-sizing: border-box;
+
+*{
+    box-sizing:border-box;
 }
 
-body {
-    margin: 0;
-    background: #050816;
-    overflow: hidden;
-    color: white;
-    font-family: "Segoe UI", Arial, sans-serif;
+body{
+    margin:0;
+    overflow:hidden;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#8fc9e8;
 }
 
-.header {
-    height: 70px;
-    background: #08111f;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 30px;
-    font-weight: bold;
-    color: #00ffff;
-    box-shadow: 0 0 20px #00ffff;
+/* =====================================================
+   TOP BAR
+===================================================== */
+
+.topbar{
+    height:72px;
+    background:#172333;
+    color:white;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 28px;
+
+    box-shadow:0 4px 15px rgba(0,0,0,.3);
+
+    position:relative;
+    z-index:100;
 }
 
-.city {
-    position: relative;
-    width: 100vw;
-    height: calc(100vh - 70px);
+.logo{
+    font-size:25px;
+    font-weight:800;
 }
 
-/* =========================
-   BUILDINGS
-========================= */
-
-.building {
-    position: absolute;
-    border-radius: 10px;
-    text-align: center;
-    padding-top: 15px;
-    font-weight: bold;
-    transition: .4s;
-    box-shadow: 0 0 25px currentColor;
+.logo span{
+    color:#37d67a;
 }
 
-.building.running {
-    animation: pulse 1s infinite alternate;
+.flow-state{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    background:#223247;
+    padding:10px 18px;
+    border-radius:30px;
+
+    font-size:14px;
 }
 
-.building.complete {
-    filter: brightness(1.5);
+.dot{
+    width:11px;
+    height:11px;
+    border-radius:50%;
+    background:#37d67a;
+
+    box-shadow:0 0 10px #37d67a;
 }
 
-#tm {
-    left: 100px;
-    top: 180px;
-    width: 160px;
-    height: 220px;
-    background: #1d4ed8;
-    color: #00ffff;
+/* =====================================================
+   CITY
+===================================================== */
+
+.city{
+    position:relative;
+    width:100vw;
+    height:calc(100vh - 72px);
+
+    background:
+        linear-gradient(
+            #91d1ec 0%,
+            #b5e0ef 48%,
+            #78bb72 48%,
+            #78bb72 100%
+        );
+
+    overflow:hidden;
 }
 
-#warehouse {
-    left: 450px;
-    top: 220px;
-    width: 180px;
-    height: 180px;
-    background: #14532d;
-    color: #00ff88;
+/* clouds */
+
+.cloud{
+    position:absolute;
+    background:white;
+    border-radius:50px;
+    opacity:.75;
+    filter:blur(1px);
 }
 
-#approval {
-    left: 850px;
-    top: 170px;
-    width: 180px;
-    height: 250px;
-    background: #7c2d12;
-    color: #ffaa00;
+.cloud:before,
+.cloud:after{
+    content:"";
+    position:absolute;
+    background:white;
+    border-radius:50%;
 }
 
-#report {
-    left: 1250px;
-    top: 200px;
-    width: 180px;
-    height: 200px;
-    background: #991b1b;
-    color: #ff4444;
+.cloud:before{
+    width:55px;
+    height:55px;
+    left:25px;
+    bottom:5px;
 }
 
-/* =========================
+.cloud:after{
+    width:75px;
+    height:75px;
+    left:65px;
+    bottom:0;
+}
+
+.cloud.one{
+    width:130px;
+    height:28px;
+    top:65px;
+    left:100px;
+}
+
+.cloud.two{
+    width:160px;
+    height:30px;
+    top:110px;
+    left:720px;
+}
+
+.cloud.three{
+    width:120px;
+    height:25px;
+    top:55px;
+    right:400px;
+}
+
+/* =====================================================
+   BACKGROUND CITY
+===================================================== */
+
+.background-building{
+    position:absolute;
+    bottom:300px;
+
+    background:#7092a4;
+
+    border-radius:4px 4px 0 0;
+
+    opacity:.55;
+}
+
+.bg1{
+    left:40px;
+    width:100px;
+    height:210px;
+}
+
+.bg2{
+    left:160px;
+    width:140px;
+    height:160px;
+}
+
+.bg3{
+    left:330px;
+    width:100px;
+    height:250px;
+}
+
+.bg4{
+    right:380px;
+    width:130px;
+    height:190px;
+}
+
+.bg5{
+    right:200px;
+    width:170px;
+    height:230px;
+}
+
+/* =====================================================
+   MAIN BUILDINGS
+===================================================== */
+
+.building{
+    position:absolute;
+    bottom:305px;
+
+    border-radius:8px 8px 2px 2px;
+
+    box-shadow:
+        0 12px 25px rgba(0,0,0,.3);
+
+    transition:.5s;
+}
+
+.building.active{
+    transform:translateY(-8px);
+
+    box-shadow:
+        0 0 0 4px rgba(55,214,122,.25),
+        0 0 35px rgba(55,214,122,.8),
+        0 15px 30px rgba(0,0,0,.3);
+}
+
+.building.complete{
+    box-shadow:
+        0 0 0 4px rgba(55,214,122,.35),
+        0 0 25px rgba(55,214,122,.6),
+        0 15px 30px rgba(0,0,0,.3);
+}
+
+/* windows */
+
+.windows{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+
+    padding:25px 18px;
+}
+
+.window{
+    height:18px;
+
+    background:#ffd86b;
+
+    border-radius:2px;
+
+    box-shadow:0 0 7px #ffd86b;
+}
+
+.window.dark{
+    background:#34495e;
+    box-shadow:none;
+}
+
+/* T&M */
+
+.tm{
+    left:90px;
+
+    width:210px;
+    height:275px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #293d55,
+            #35556f
+        );
+
+    border-top:10px solid #36d38a;
+}
+
+.tm .sign{
+    position:absolute;
+    top:-45px;
+    left:25px;
+
+    background:#36d38a;
+    color:#10231b;
+
+    padding:8px 15px;
+
+    border-radius:6px;
+
+    font-weight:bold;
+}
+
+/* warehouse */
+
+.warehouse{
+    left:390px;
+
+    width:250px;
+    height:180px;
+
+    background:#d98b43;
+
+    border-bottom:14px solid #a85d27;
+}
+
+.warehouse .roof{
+    position:absolute;
+
+    top:-28px;
+    left:-10px;
+
+    width:270px;
+    height:35px;
+
+    background:#8b3f29;
+
+    transform:skewX(-25deg);
+}
+
+.warehouse .sign{
+    position:absolute;
+
+    top:25px;
+    left:25px;
+
+    background:#fff4d2;
+
+    padding:7px 15px;
+
+    color:#5d351e;
+
+    font-weight:bold;
+}
+
+.loading-door{
+    position:absolute;
+
+    bottom:0;
+    left:75px;
+
+    width:100px;
+    height:80px;
+
+    background:#3d4650;
+
+    border:6px solid #26313b;
+}
+
+/* approval */
+
+.approval{
+    left:760px;
+
+    width:190px;
+    height:320px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #5a6f85,
+            #71899e,
+            #526a80
+        );
+
+    border-top:10px solid #f0b84c;
+}
+
+.approval .antenna{
+    position:absolute;
+
+    top:-70px;
+    left:90px;
+
+    width:8px;
+    height:70px;
+
+    background:#444;
+}
+
+.approval .antenna:after{
+    content:"";
+
+    position:absolute;
+
+    top:-8px;
+    left:-8px;
+
+    width:24px;
+    height:24px;
+
+    background:#f0b84c;
+
+    border-radius:50%;
+
+    box-shadow:0 0 15px #f0b84c;
+}
+
+.approval .label{
+    position:absolute;
+
+    top:20px;
+    left:15px;
+
+    right:15px;
+
+    text-align:center;
+
+    color:white;
+
+    font-weight:bold;
+}
+
+/* report center */
+
+.report{
+    left:1080px;
+
+    width:230px;
+    height:245px;
+
+    background:#f4f4f4;
+
+    border-top:12px solid #e64b4b;
+}
+
+.report .report-header{
+    background:#e64b4b;
+
+    color:white;
+
+    padding:13px;
+
+    font-weight:bold;
+}
+
+.paper{
+    margin:18px;
+
+    height:130px;
+
+    background:white;
+
+    border:1px solid #ddd;
+
+    padding:12px;
+}
+
+.paper-line{
+    height:7px;
+
+    background:#ccd3d8;
+
+    margin-bottom:10px;
+
+    border-radius:5px;
+}
+
+.paper-line.green{
+    width:70%;
+    background:#37c97b;
+}
+
+/* =====================================================
    ROAD
-========================= */
+===================================================== */
 
-.road {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 180px;
-    height: 100px;
-    background: #222;
+.road-horizontal{
+    position:absolute;
+
+    left:0;
+    right:0;
+
+    bottom:135px;
+
+    height:170px;
+
+    background:#353b40;
+
+    border-top:8px solid #596168;
+    border-bottom:8px solid #596168;
 }
 
-.line {
-    position: absolute;
-    top: 45px;
-    width: 100%;
-    border-top: 6px dashed yellow;
+.road-horizontal:before{
+    content:"";
+
+    position:absolute;
+
+    top:78px;
+    left:0;
+    right:0;
+
+    border-top:6px dashed #f7db45;
 }
 
-/* =========================
+/* vertical street */
+
+.road-vertical{
+    position:absolute;
+
+    left:680px;
+
+    bottom:0;
+
+    width:180px;
+
+    height:305px;
+
+    background:#353b40;
+
+    border-left:8px solid #596168;
+    border-right:8px solid #596168;
+}
+
+.road-vertical:before{
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    bottom:0;
+
+    left:87px;
+
+    border-left:6px dashed #f7db45;
+}
+
+/* =====================================================
+   SIDEWALKS
+===================================================== */
+
+.sidewalk{
+    position:absolute;
+
+    bottom:305px;
+
+    height:35px;
+
+    background:#c9c5b8;
+
+    border-top:3px solid #aaa69c;
+    border-bottom:3px solid #aaa69c;
+}
+
+.sidewalk.left{
+    left:0;
+    right:0;
+}
+
+/* =====================================================
+   CARS
+===================================================== */
+
+.car{
+    position:absolute;
+
+    width:58px;
+    height:30px;
+
+    border-radius:9px 13px 7px 7px;
+
+    z-index:20;
+
+    box-shadow:0 5px 8px rgba(0,0,0,.4);
+
+    transition:left linear;
+}
+
+.car:before{
+    content:"";
+
+    position:absolute;
+
+    width:28px;
+    height:15px;
+
+    top:-8px;
+    left:15px;
+
+    background:inherit;
+
+    border-radius:8px 8px 2px 2px;
+}
+
+.car:after{
+    content:"";
+
+    position:absolute;
+
+    bottom:-5px;
+    left:8px;
+
+    width:10px;
+    height:10px;
+
+    border-radius:50%;
+
+    background:#171717;
+
+    box-shadow:32px 0 0 #171717;
+}
+
+.car.red{
+    background:#e84d4d;
+}
+
+.car.blue{
+    background:#3e78d8;
+}
+
+.car.yellow{
+    background:#f2c94c;
+}
+
+.car.black{
+    background:#30343b;
+}
+
+/* =====================================================
    TRUCK
-========================= */
+===================================================== */
 
-#truck {
-    position: absolute;
-    width: 80px;
-    height: 45px;
-    background: cyan;
-    border-radius: 8px;
-    bottom: 210px;
-    left: 120px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 28px;
+.truck{
+    position:absolute;
 
-    box-shadow: 0 0 20px cyan;
+    width:100px;
+    height:48px;
 
-    transition:
-        left 3.5s linear,
-        transform .3s;
+    bottom:198px;
+    left:80px;
+
+    z-index:40;
+
+    transition:left 4s linear;
+
+    filter:drop-shadow(0 7px 5px rgba(0,0,0,.35));
 }
 
-#truck.moving {
-    transform: translateY(-4px);
+.truck-body{
+    position:absolute;
+
+    left:0;
+    bottom:5px;
+
+    width:68px;
+    height:38px;
+
+    background:#27b9d6;
+
+    border-radius:5px 2px 2px 5px;
 }
 
-/* =========================
-   CARGO
-========================= */
+.truck-cab{
+    position:absolute;
 
-#box {
-    position: absolute;
-    width: 35px;
-    height: 35px;
-    background: orange;
-    border-radius: 4px;
-    display: none;
+    right:0;
+    bottom:5px;
 
-    box-shadow: 0 0 15px orange;
+    width:38px;
+    height:32px;
 
-    transition: all 1s ease;
+    background:#f2a93b;
+
+    border-radius:3px 8px 4px 2px;
 }
 
-/* =========================
-   LOG PANEL
-========================= */
+.truck-window{
+    position:absolute;
 
-.panel {
-    position: absolute;
-    right: 20px;
-    top: 100px;
+    right:5px;
+    top:5px;
 
-    width: 320px;
-    height: 360px;
+    width:20px;
+    height:12px;
 
-    background: rgba(0, 0, 0, .65);
+    background:#bce8f1;
 
-    border: 1px solid cyan;
-    border-radius: 10px;
-
-    padding: 15px;
-
-    overflow: auto;
-
-    box-shadow: 0 0 20px rgba(0,255,255,.3);
+    border-radius:3px;
 }
 
-.panel h3 {
-    margin-top: 0;
-    color: cyan;
+.wheel{
+    position:absolute;
+
+    bottom:-3px;
+
+    width:17px;
+    height:17px;
+
+    background:#202020;
+
+    border:3px solid #777;
+
+    border-radius:50%;
 }
 
-.log {
-    margin-bottom: 10px;
-    padding: 8px;
-
-    border-left: 3px solid cyan;
-    background: rgba(0,255,255,.05);
-
-    font-size: 13px;
+.wheel.one{
+    left:12px;
 }
 
-.log.running {
-    border-left-color: orange;
+.wheel.two{
+    right:12px;
 }
 
-.log.complete {
-    border-left-color: #00ff88;
+/* =====================================================
+   TREES
+===================================================== */
+
+.tree{
+    position:absolute;
+
+    bottom:300px;
+
+    width:50px;
+    height:80px;
+
+    z-index:10;
 }
 
-.log.error {
-    border-left-color: red;
+.tree .trunk{
+    position:absolute;
+
+    bottom:0;
+    left:21px;
+
+    width:9px;
+    height:35px;
+
+    background:#70452b;
 }
 
-/* =========================
-   CONTROL CENTER
-========================= */
+.tree .leaves{
+    position:absolute;
 
-.control {
-    position: absolute;
+    top:0;
+    left:0;
 
-    left: 50%;
-    transform: translateX(-50%);
+    width:50px;
+    height:50px;
 
-    bottom: 20px;
+    border-radius:50%;
 
-    width: 420px;
+    background:#2f9e55;
 
-    padding: 15px;
-
-    text-align: center;
-
-    border: 1px solid cyan;
-    border-radius: 10px;
-
-    box-shadow: 0 0 20px cyan;
-
-    background: rgba(0,0,0,.5);
+    box-shadow:
+        20px 5px 0 #38a95e,
+        -15px 10px 0 #2c914e;
 }
 
-.control h2 {
-    margin: 5px 0 10px;
-    color: cyan;
+.tree.t1{left:330px}
+.tree.t2{left:660px}
+.tree.t3{right:320px}
+.tree.t4{right:40px}
+
+/* =====================================================
+   STREET LIGHTS
+===================================================== */
+
+.streetlight{
+    position:absolute;
+
+    bottom:300px;
+
+    width:5px;
+    height:85px;
+
+    background:#333;
+
+    z-index:15;
 }
 
-#status {
-    margin-bottom: 12px;
-    color: #00ff88;
-    font-weight: bold;
+.streetlight:before{
+    content:"";
+
+    position:absolute;
+
+    top:-8px;
+    left:-7px;
+
+    width:19px;
+    height:12px;
+
+    border-radius:8px;
+
+    background:#ffe98a;
+
+    box-shadow:0 0 18px #ffe98a;
 }
 
-button {
-    background: #00ffff;
-    color: #001014;
+.light1{left:50px}
+.light2{left:720px}
+.light3{right:280px}
+.light4{right:30px}
 
-    border: none;
-    border-radius: 6px;
+/* =====================================================
+   STATUS PANEL
+===================================================== */
 
-    padding: 10px 25px;
+.dashboard{
+    position:absolute;
 
-    font-weight: bold;
+    top:25px;
+    right:25px;
 
-    cursor: pointer;
+    width:300px;
+
+    background:rgba(18,29,42,.94);
+
+    color:white;
+
+    border-radius:14px;
+
+    padding:20px;
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.35);
+
+    z-index:80;
 }
 
-button:hover {
-    background: white;
+.dashboard-title{
+    font-size:20px;
+    font-weight:bold;
+
+    margin-bottom:15px;
 }
 
-button:disabled {
-    opacity: .5;
-    cursor: not-allowed;
+.progress{
+    height:8px;
+
+    background:#334454;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    margin:12px 0 18px;
 }
 
-/* =========================
-   ANIMATIONS
-========================= */
+.progress-bar{
+    height:100%;
+    width:0%;
 
-@keyframes pulse {
-    from {
-        box-shadow: 0 0 15px currentColor;
-    }
+    background:#37d67a;
 
-    to {
-        box-shadow:
-            0 0 45px currentColor,
-            0 0 70px currentColor;
-    }
+    transition:width 1s;
 }
 
-@keyframes loading {
-    0% {
-        transform: translateY(0);
-    }
+.step{
+    display:flex;
 
-    50% {
-        transform: translateY(-25px);
-    }
+    align-items:center;
 
-    100% {
-        transform: translateY(0);
-    }
+    gap:10px;
+
+    padding:9px 0;
+
+    border-bottom:1px solid rgba(255,255,255,.08);
+
+    font-size:13px;
 }
 
-.loading {
-    animation: loading .7s infinite;
+.step-icon{
+    width:27px;
+    height:27px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:#304052;
 }
+
+.step.active .step-icon{
+    background:#f0b84c;
+
+    box-shadow:0 0 12px #f0b84c;
+}
+
+.step.done .step-icon{
+    background:#37d67a;
+}
+
+.start{
+    width:100%;
+
+    margin-top:15px;
+
+    padding:12px;
+
+    border:0;
+
+    border-radius:8px;
+
+    background:#37d67a;
+
+    color:#102019;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    font-size:14px;
+}
+
+.start:hover{
+    background:#54e993;
+}
+
+/* =====================================================
+   REPORT POPUP
+===================================================== */
+
+.report-popup{
+    position:absolute;
+
+    left:50%;
+    top:40%;
+
+    transform:translate(-50%,-50%) scale(.7);
+
+    width:360px;
+
+    background:white;
+
+    color:#1d2935;
+
+    border-radius:12px;
+
+    padding:22px;
+
+    box-shadow:0 25px 70px rgba(0,0,0,.45);
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.5s;
+
+    z-index:200;
+}
+
+.report-popup.show{
+    opacity:1;
+
+    transform:translate(-50%,-50%) scale(1);
+}
+
+.report-popup h2{
+    margin-top:0;
+
+    color:#1f9e5a;
+}
+
+.report-row{
+    display:flex;
+    justify-content:space-between;
+
+    padding:9px 0;
+
+    border-bottom:1px solid #ddd;
+
+    font-size:14px;
+}
+
+.close-report{
+    margin-top:15px;
+
+    width:100%;
+
+    padding:10px;
+
+    border:0;
+
+    border-radius:7px;
+
+    background:#172333;
+
+    color:white;
+
+    cursor:pointer;
+}
+
 </style>
 </head>
 
+
 <body>
 
-<div class="header">
-    🏙 FLOW CITY — POWER AUTOMATE
-</div>
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
-<div class="city">
+<header class="topbar">
 
-    <!-- BUILDINGS -->
-
-    <div id="tm" class="building">
-        ⚡<br>
-        T&M FLOW
+    <div class="logo">
+        🏙️ <span>FLOW</span> CITY
     </div>
 
-    <div id="warehouse" class="building">
-        🏭<br>
-        WAREHOUSE
+    <div>
+        POWER AUTOMATE
     </div>
 
-    <div id="approval" class="building">
-        🛂<br>
-        APPROVAL TOWER
+    <div class="flow-state">
+        <div class="dot"></div>
+        <span id="topStatus">Ready</span>
     </div>
 
-    <div id="report" class="building">
-        📊<br>
-        REPORT CENTER
+</header>
+
+
+<!-- =====================================================
+     CITY
+===================================================== -->
+
+<main class="city">
+
+    <!-- CLOUDS -->
+
+    <div class="cloud one"></div>
+    <div class="cloud two"></div>
+    <div class="cloud three"></div>
+
+
+    <!-- BACKGROUND BUILDINGS -->
+
+    <div class="background-building bg1"></div>
+    <div class="background-building bg2"></div>
+    <div class="background-building bg3"></div>
+    <div class="background-building bg4"></div>
+    <div class="background-building bg5"></div>
+
+
+    <!-- MAIN BUILDINGS -->
+
+    <div class="building tm" id="tm">
+
+        <div class="sign">
+            ⚡ T&M HQ
+        </div>
+
+        <div class="windows">
+            <div class="window"></div>
+            <div class="window dark"></div>
+            <div class="window"></div>
+
+            <div class="window dark"></div>
+            <div class="window"></div>
+            <div class="window"></div>
+
+            <div class="window"></div>
+            <div class="window dark"></div>
+            <div class="window"></div>
+
+            <div class="window"></div>
+            <div class="window"></div>
+            <div class="window dark"></div>
+        </div>
+
     </div>
+
+
+    <div class="building warehouse" id="warehouse">
+
+        <div class="roof"></div>
+
+        <div class="sign">
+            📦 WAREHOUSE
+        </div>
+
+        <div class="loading-door"></div>
+
+    </div>
+
+
+    <div class="building approval" id="approval">
+
+        <div class="antenna"></div>
+
+        <div class="label">
+            🛂<br>
+            APPROVAL
+        </div>
+
+        <div class="windows">
+
+            <div class="window"></div>
+            <div class="window"></div>
+            <div class="window dark"></div>
+
+            <div class="window dark"></div>
+            <div class="window"></div>
+            <div class="window"></div>
+
+            <div class="window"></div>
+            <div class="window dark"></div>
+            <div class="window"></div>
+
+            <div class="window"></div>
+            <div class="window"></div>
+            <div class="window"></div>
+
+        </div>
+
+    </div>
+
+
+    <div class="building report" id="report">
+
+        <div class="report-header">
+            📊 REPORT CENTER
+        </div>
+
+        <div class="paper">
+
+            <div class="paper-line"></div>
+            <div class="paper-line"></div>
+            <div class="paper-line green"></div>
+            <div class="paper-line"></div>
+            <div class="paper-line green"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SIDEWALK -->
+
+    <div class="sidewalk left"></div>
 
 
     <!-- ROAD -->
 
-    <div class="road">
-        <div class="line"></div>
+    <div class="road-horizontal"></div>
+
+    <div class="road-vertical"></div>
+
+
+    <!-- TREES -->
+
+    <div class="tree t1">
+        <div class="leaves"></div>
+        <div class="trunk"></div>
     </div>
+
+    <div class="tree t2">
+        <div class="leaves"></div>
+        <div class="trunk"></div>
+    </div>
+
+    <div class="tree t3">
+        <div class="leaves"></div>
+        <div class="trunk"></div>
+    </div>
+
+    <div class="tree t4">
+        <div class="leaves"></div>
+        <div class="trunk"></div>
+    </div>
+
+
+    <!-- STREET LIGHTS -->
+
+    <div class="streetlight light1"></div>
+    <div class="streetlight light2"></div>
+    <div class="streetlight light3"></div>
+    <div class="streetlight light4"></div>
+
+
+    <!-- CARS -->
+
+    <div class="car red" id="car1" style="left:20px;bottom:205px"></div>
+
+    <div class="car blue" id="car2" style="left:500px;bottom:255px"></div>
+
+    <div class="car yellow" id="car3" style="left:950px;bottom:205px"></div>
+
+    <div class="car black" id="car4" style="left:1350px;bottom:255px"></div>
 
 
     <!-- TRUCK -->
 
-    <div id="truck">
-        🚚
-    </div>
+    <div class="truck" id="truck">
 
+        <div class="truck-body"></div>
 
-    <!-- CARGO -->
-
-    <div id="box"></div>
-
-
-    <!-- LIVE LOG -->
-
-    <div class="panel">
-
-        <h3>🟢 LIVE ACTIVITY</h3>
-
-        <div id="logs"></div>
-
-    </div>
-
-
-    <!-- CONTROL -->
-
-    <div class="control">
-
-        <h2>CONTROL CENTER</h2>
-
-        <div id="status">
-            Waiting for flow...
+        <div class="truck-cab">
+            <div class="truck-window"></div>
         </div>
 
-        <button id="startButton" onclick="runFlow()">
-            ▶ START FLOW
+        <div class="wheel one"></div>
+        <div class="wheel two"></div>
+
+    </div>
+
+
+    <!-- =================================================
+         DASHBOARD
+    ================================================== -->
+
+    <section class="dashboard">
+
+        <div class="dashboard-title">
+            ⚡ Flow Run
+        </div>
+
+        <div id="runStatus">
+            Ready to start
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+
+
+        <div class="step" id="step1">
+            <div class="step-icon">⚡</div>
+            <span>T&M Flow</span>
+        </div>
+
+        <div class="step" id="step2">
+            <div class="step-icon">📦</div>
+            <span>Warehouse</span>
+        </div>
+
+        <div class="step" id="step3">
+            <div class="step-icon">✓</div>
+            <span>Approval</span>
+        </div>
+
+        <div class="step" id="step4">
+            <div class="step-icon">📊</div>
+            <span>Report</span>
+        </div>
+
+
+        <button class="start" onclick="startFlow()">
+            ▶ RUN FLOW
+        </button>
+
+    </section>
+
+
+    <!-- REPORT -->
+
+    <div class="report-popup" id="reportPopup">
+
+        <h2>✓ Flow Completed</h2>
+
+        <p>
+            The Power Automate run completed successfully.
+        </p>
+
+        <div class="report-row">
+            <span>Run ID</span>
+            <strong>#FLOW-1042</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Materials</span>
+            <strong>Loaded</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Approval</span>
+            <strong>Approved</strong>
+        </div>
+
+        <div class="report-row">
+            <span>Report</span>
+            <strong>Delivered</strong>
+        </div>
+
+        <button class="close-report"
+                onclick="closeReport()">
+            Close Report
         </button>
 
     </div>
 
-</div>
+</main>
 
 
 <script>
 
-const truck = document.getElementById("truck");
-const logs = document.getElementById("logs");
-const status = document.getElementById("status");
-const box = document.getElementById("box");
-const startButton = document.getElementById("startButton");
+/* =====================================================
+   ELEMENTS
+===================================================== */
 
-const buildings = {
-    tm: document.getElementById("tm"),
-    warehouse: document.getElementById("warehouse"),
-    approval: document.getElementById("approval"),
-    report: document.getElementById("report")
-};
+const truck =
+    document.getElementById("truck");
+
+const tm =
+    document.getElementById("tm");
+
+const warehouse =
+    document.getElementById("warehouse");
+
+const approval =
+    document.getElementById("approval");
+
+const report =
+    document.getElementById("report");
+
+const progress =
+    document.getElementById("progress");
+
+const runStatus =
+    document.getElementById("runStatus");
+
+const topStatus =
+    document.getElementById("topStatus");
+
+const reportPopup =
+    document.getElementById("reportPopup");
 
 
-/* =========================
-   UTILITIES
-========================= */
+const steps = [
+    document.getElementById("step1"),
+    document.getElementById("step2"),
+    document.getElementById("step3"),
+    document.getElementById("step4")
+];
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function wait(ms){
+
+    return new Promise(resolve =>
+        setTimeout(resolve,ms)
+    );
+
 }
 
 
-function clearBuildings() {
+function resetBuildings(){
 
-    Object.values(buildings).forEach(building => {
-        building.classList.remove("running");
-        building.classList.remove("complete");
+    [tm,warehouse,approval,report]
+        .forEach(building => {
+
+            building.classList.remove("active");
+            building.classList.remove("complete");
+
+        });
+
+}
+
+
+function resetSteps(){
+
+    steps.forEach(step => {
+
+        step.classList.remove("active");
+        step.classList.remove("done");
+
     });
 
 }
 
 
-function setRunning(building) {
+function activate(building,step){
 
-    clearBuildings();
+    resetBuildings();
 
-    building.classList.add("running");
+    building.classList.add("active");
+
+    resetSteps();
+
+    step.classList.add("active");
+
 }
 
 
-function setComplete(building) {
+function complete(building,step){
 
-    building.classList.remove("running");
+    building.classList.remove("active");
 
     building.classList.add("complete");
+
+    step.classList.remove("active");
+
+    step.classList.add("done");
+
 }
 
 
-function log(message, type = "") {
+function setProgress(value){
 
-    const item = document.createElement("div");
+    progress.style.width =
+        value + "%";
 
-    item.className = "log " + type;
-
-    const time = new Date().toLocaleTimeString();
-
-    item.innerHTML =
-        `<strong>${time}</strong><br>${message}`;
-
-    logs.prepend(item);
 }
 
 
-function moveTruck(position) {
-
-    truck.classList.add("moving");
-
-    truck.style.left = position;
-
-    return sleep(3500).then(() => {
-
-        truck.classList.remove("moving");
-
-    });
-}
-
-
-/* =========================
+/* =====================================================
    FLOW
-========================= */
+===================================================== */
 
-async function runFlow() {
+async function startFlow(){
 
-    if (startButton.disabled) {
-        return;
-    }
+    resetBuildings();
+    resetSteps();
 
-    startButton.disabled = true;
+    reportPopup.classList.remove("show");
 
-    logs.innerHTML = "";
+    setProgress(0);
 
-    clearBuildings();
+    /* T&M */
 
-    /* START */
+    activate(tm,steps[0]);
 
-    setRunning(buildings.tm);
+    runStatus.innerText =
+        "Flow triggered";
 
-    status.innerHTML = "⚡ T&M Flow Running";
+    topStatus.innerText =
+        "Running";
 
-    log("T&M Flow triggered", "running");
+    setProgress(10);
 
-    await sleep(2000);
+    await wait(1800);
 
-    setComplete(buildings.tm);
+    complete(tm,steps[0]);
 
-    log("T&M Flow started successfully", "complete");
+
+    /* DRIVE TO WAREHOUSE */
+
+    runStatus.innerText =
+        "Truck driving to warehouse";
+
+    truck.style.left =
+        "430px";
+
+    await wait(4000);
 
 
     /* WAREHOUSE */
 
-    status.innerHTML = "🚚 Driving to Warehouse";
+    activate(warehouse,steps[1]);
 
-    log("Truck dispatched to Warehouse", "running");
+    runStatus.innerText =
+        "Loading materials";
 
-    await moveTruck("450px");
+    setProgress(35);
 
-    setRunning(buildings.warehouse);
+    await wait(2500);
 
-    status.innerHTML = "🏭 Loading Materials";
-
-    log("Truck arrived at Warehouse", "running");
-
-    await sleep(1000);
+    complete(warehouse,steps[1]);
 
 
-    /* LOAD CARGO */
+    /* DRIVE TO APPROVAL */
 
-    box.style.display = "block";
+    runStatus.innerText =
+        "Truck driving to approval";
 
-    box.style.left = "530px";
-    box.style.top = "390px";
+    truck.style.left =
+        "800px";
 
-    await sleep(500);
-
-    box.classList.add("loading");
-
-    log("Loading materials onto truck", "running");
-
-    await sleep(2000);
-
-    box.classList.remove("loading");
-
-    box.style.display = "none";
-
-    setComplete(buildings.warehouse);
-
-    log("Materials loaded successfully", "complete");
+    await wait(4000);
 
 
     /* APPROVAL */
 
-    status.innerHTML = "🚚 Driving to Approval Tower";
+    activate(approval,steps[2]);
 
-    log("Truck leaving Warehouse", "running");
+    runStatus.innerText =
+        "Approval processing";
 
-    await moveTruck("850px");
+    setProgress(65);
 
-    setRunning(buildings.approval);
+    await wait(3000);
 
-    status.innerHTML = "🛂 Approval Processing";
+    complete(approval,steps[2]);
 
-    log("Approval request submitted", "running");
 
-    await sleep(3000);
+    /* DRIVE TO REPORT */
 
-    setComplete(buildings.approval);
+    runStatus.innerText =
+        "Truck delivering report";
 
-    log("Approval completed", "complete");
+    truck.style.left =
+        "1100px";
+
+    await wait(3500);
 
 
     /* REPORT */
 
-    status.innerHTML = "🚚 Driving to Report Center";
+    activate(report,steps[3]);
 
-    log("Truck transporting approved data", "running");
+    runStatus.innerText =
+        "Generating report";
 
-    await moveTruck("1250px");
+    setProgress(90);
 
-    setRunning(buildings.report);
+    await wait(3000);
 
-    status.innerHTML = "📊 Generating Report";
-
-    log("Report generation started", "running");
-
-    await sleep(3000);
-
-    setComplete(buildings.report);
-
-    status.innerHTML = "✅ Report Delivered";
-
-    log("Report delivered successfully", "complete");
+    complete(report,steps[3]);
 
 
     /* FINISHED */
 
-    await sleep(1000);
+    setProgress(100);
 
-    status.innerHTML = "🟢 Flow Completed";
+    runStatus.innerText =
+        "✓ Flow completed";
 
-    log("FLOW COMPLETED SUCCESSFULLY", "complete");
+    topStatus.innerText =
+        "Completed";
 
-    startButton.disabled = false;
+    await wait(800);
+
+    reportPopup.classList.add("show");
 
 }
 
 
-/* Initial message */
+/* =====================================================
+   REPORT
+===================================================== */
 
-log("Waiting for Power Automate trigger...");
+function closeReport(){
+
+    reportPopup.classList.remove("show");
+
+}
+
+
+/* =====================================================
+   MOVING TRAFFIC
+===================================================== */
+
+function moveCar(id,start,end,duration){
+
+    const car =
+        document.getElementById(id);
+
+    car.style.transition =
+        `left ${duration}s linear`;
+
+    car.style.left =
+        end + "px";
+
+    setTimeout(() => {
+
+        car.style.transition = "none";
+
+        car.style.left =
+            start + "px";
+
+        setTimeout(() => {
+
+            moveCar(
+                id,
+                start,
+                end,
+                duration
+            );
+
+        },100);
+
+    },duration * 1000);
+
+}
+
+
+moveCar("car1",-80,window.innerWidth + 80,18);
+
+moveCar("car2",-100,window.innerWidth + 100,22);
+
+moveCar("car3",window.innerWidth + 80,-100,20);
+
+moveCar("car4",window.innerWidth + 100,-100,25);
 
 </script>
 
