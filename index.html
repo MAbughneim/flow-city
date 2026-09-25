@@ -3,285 +3,602 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flow City v2</title>
+
+<title>Flow City - Power Automate Simulation</title>
 
 <style>
-
-body{
-    margin:0;
-    background:#050816;
-    overflow:hidden;
-    color:white;
-    font-family:Segoe UI;
+* {
+    box-sizing: border-box;
 }
 
-.header{
-    height:70px;
-    background:#08111f;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:34px;
-    font-weight:bold;
-    color:#00ffff;
-    box-shadow:0 0 20px #00ffff;
+body {
+    margin: 0;
+    background: #050816;
+    overflow: hidden;
+    color: white;
+    font-family: "Segoe UI", Arial, sans-serif;
 }
 
-.city{
-    position:relative;
-    width:100vw;
-    height:calc(100vh - 70px);
+.header {
+    height: 70px;
+    background: #08111f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: #00ffff;
+    box-shadow: 0 0 20px #00ffff;
 }
 
-/* Buildings */
-
-.building{
-    position:absolute;
-    border-radius:10px;
-    text-align:center;
-    padding-top:15px;
-    font-weight:bold;
-    box-shadow:0 0 25px currentColor;
+.city {
+    position: relative;
+    width: 100vw;
+    height: calc(100vh - 70px);
 }
 
-#tm{
-    left:100px;
-    top:180px;
-    width:160px;
-    height:220px;
-    background:#1d4ed8;
-    color:#00ffff;
+/* =========================
+   BUILDINGS
+========================= */
+
+.building {
+    position: absolute;
+    border-radius: 10px;
+    text-align: center;
+    padding-top: 15px;
+    font-weight: bold;
+    transition: .4s;
+    box-shadow: 0 0 25px currentColor;
 }
 
-#warehouse{
-    left:450px;
-    top:220px;
-    width:180px;
-    height:180px;
-    background:#14532d;
-    color:#00ff88;
+.building.running {
+    animation: pulse 1s infinite alternate;
 }
 
-#approval{
-    left:850px;
-    top:170px;
-    width:180px;
-    height:250px;
-    background:#7c2d12;
-    color:#ffaa00;
+.building.complete {
+    filter: brightness(1.5);
 }
 
-#report{
-    left:1250px;
-    top:200px;
-    width:180px;
-    height:200px;
-    background:#991b1b;
-    color:#ff4444;
+#tm {
+    left: 100px;
+    top: 180px;
+    width: 160px;
+    height: 220px;
+    background: #1d4ed8;
+    color: #00ffff;
 }
 
-/* Road */
-
-.road{
-    position:absolute;
-    left:0;
-    right:0;
-    bottom:180px;
-    height:100px;
-    background:#222;
+#warehouse {
+    left: 450px;
+    top: 220px;
+    width: 180px;
+    height: 180px;
+    background: #14532d;
+    color: #00ff88;
 }
 
-.line{
-    position:absolute;
-    top:45px;
-    width:100%;
-    border-top:6px dashed yellow;
+#approval {
+    left: 850px;
+    top: 170px;
+    width: 180px;
+    height: 250px;
+    background: #7c2d12;
+    color: #ffaa00;
 }
 
-/* Truck */
-
-#truck{
-    position:absolute;
-    width:70px;
-    height:40px;
-    background:cyan;
-    border-radius:8px;
-    bottom:210px;
-    left:120px;
-    box-shadow:0 0 20px cyan;
-    transition:all 3s linear;
+#report {
+    left: 1250px;
+    top: 200px;
+    width: 180px;
+    height: 200px;
+    background: #991b1b;
+    color: #ff4444;
 }
 
-/* Cargo */
+/* =========================
+   ROAD
+========================= */
 
-#box{
-    position:absolute;
-    width:30px;
-    height:30px;
-    background:orange;
-    display:none;
+.road {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 180px;
+    height: 100px;
+    background: #222;
 }
 
-/* Log */
-
-.panel{
-    position:absolute;
-    right:20px;
-    top:100px;
-    width:300px;
-    height:350px;
-    background:rgba(0,0,0,.5);
-    border:1px solid cyan;
-    padding:15px;
-    overflow:auto;
+.line {
+    position: absolute;
+    top: 45px;
+    width: 100%;
+    border-top: 6px dashed yellow;
 }
 
-.panel h3{
-    color:cyan;
+/* =========================
+   TRUCK
+========================= */
+
+#truck {
+    position: absolute;
+    width: 80px;
+    height: 45px;
+    background: cyan;
+    border-radius: 8px;
+    bottom: 210px;
+    left: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+
+    box-shadow: 0 0 20px cyan;
+
+    transition:
+        left 3.5s linear,
+        transform .3s;
 }
 
-.log{
-    margin-bottom:10px;
+#truck.moving {
+    transform: translateY(-4px);
 }
 
-.control{
-    position:absolute;
-    left:50%;
-    transform:translateX(-50%);
-    bottom:20px;
-    width:350px;
-    padding:20px;
-    text-align:center;
-    border:1px solid cyan;
-    box-shadow:0 0 20px cyan;
+/* =========================
+   CARGO
+========================= */
+
+#box {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    background: orange;
+    border-radius: 4px;
+    display: none;
+
+    box-shadow: 0 0 15px orange;
+
+    transition: all 1s ease;
 }
 
+/* =========================
+   LOG PANEL
+========================= */
+
+.panel {
+    position: absolute;
+    right: 20px;
+    top: 100px;
+
+    width: 320px;
+    height: 360px;
+
+    background: rgba(0, 0, 0, .65);
+
+    border: 1px solid cyan;
+    border-radius: 10px;
+
+    padding: 15px;
+
+    overflow: auto;
+
+    box-shadow: 0 0 20px rgba(0,255,255,.3);
+}
+
+.panel h3 {
+    margin-top: 0;
+    color: cyan;
+}
+
+.log {
+    margin-bottom: 10px;
+    padding: 8px;
+
+    border-left: 3px solid cyan;
+    background: rgba(0,255,255,.05);
+
+    font-size: 13px;
+}
+
+.log.running {
+    border-left-color: orange;
+}
+
+.log.complete {
+    border-left-color: #00ff88;
+}
+
+.log.error {
+    border-left-color: red;
+}
+
+/* =========================
+   CONTROL CENTER
+========================= */
+
+.control {
+    position: absolute;
+
+    left: 50%;
+    transform: translateX(-50%);
+
+    bottom: 20px;
+
+    width: 420px;
+
+    padding: 15px;
+
+    text-align: center;
+
+    border: 1px solid cyan;
+    border-radius: 10px;
+
+    box-shadow: 0 0 20px cyan;
+
+    background: rgba(0,0,0,.5);
+}
+
+.control h2 {
+    margin: 5px 0 10px;
+    color: cyan;
+}
+
+#status {
+    margin-bottom: 12px;
+    color: #00ff88;
+    font-weight: bold;
+}
+
+button {
+    background: #00ffff;
+    color: #001014;
+
+    border: none;
+    border-radius: 6px;
+
+    padding: 10px 25px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+button:hover {
+    background: white;
+}
+
+button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes pulse {
+    from {
+        box-shadow: 0 0 15px currentColor;
+    }
+
+    to {
+        box-shadow:
+            0 0 45px currentColor,
+            0 0 70px currentColor;
+    }
+}
+
+@keyframes loading {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-25px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.loading {
+    animation: loading .7s infinite;
+}
 </style>
 </head>
 
 <body>
 
 <div class="header">
-🏙 FLOW CITY V2
+    🏙 FLOW CITY — POWER AUTOMATE
 </div>
 
 <div class="city">
 
-<div id="tm" class="building">
-T&M FLOW
+    <!-- BUILDINGS -->
+
+    <div id="tm" class="building">
+        ⚡<br>
+        T&M FLOW
+    </div>
+
+    <div id="warehouse" class="building">
+        🏭<br>
+        WAREHOUSE
+    </div>
+
+    <div id="approval" class="building">
+        🛂<br>
+        APPROVAL TOWER
+    </div>
+
+    <div id="report" class="building">
+        📊<br>
+        REPORT CENTER
+    </div>
+
+
+    <!-- ROAD -->
+
+    <div class="road">
+        <div class="line"></div>
+    </div>
+
+
+    <!-- TRUCK -->
+
+    <div id="truck">
+        🚚
+    </div>
+
+
+    <!-- CARGO -->
+
+    <div id="box"></div>
+
+
+    <!-- LIVE LOG -->
+
+    <div class="panel">
+
+        <h3>🟢 LIVE ACTIVITY</h3>
+
+        <div id="logs"></div>
+
+    </div>
+
+
+    <!-- CONTROL -->
+
+    <div class="control">
+
+        <h2>CONTROL CENTER</h2>
+
+        <div id="status">
+            Waiting for flow...
+        </div>
+
+        <button id="startButton" onclick="runFlow()">
+            ▶ START FLOW
+        </button>
+
+    </div>
+
 </div>
 
-<div id="warehouse" class="building">
-WAREHOUSE
-</div>
-
-<div id="approval" class="building">
-APPROVAL TOWER
-</div>
-
-<div id="report" class="building">
-REPORT CENTER
-</div>
-
-<div class="road">
-<div class="line"></div>
-</div>
-
-<div id="truck">🚚</div>
-<div id="box"></div>
-
-<div class="panel">
-<h3>LIVE ACTIVITY</h3>
-<div id="logs"></div>
-</div>
-
-<div class="control">
-<h2>CONTROL CENTER</h2>
-<div id="status">Waiting...</div>
-</div>
-
-</div>
 
 <script>
 
-const truck=document.getElementById("truck");
-const logs=document.getElementById("logs");
-const status=document.getElementById("status");
-const box=document.getElementById("box");
+const truck = document.getElementById("truck");
+const logs = document.getElementById("logs");
+const status = document.getElementById("status");
+const box = document.getElementById("box");
+const startButton = document.getElementById("startButton");
 
-function log(message){
+const buildings = {
+    tm: document.getElementById("tm"),
+    warehouse: document.getElementById("warehouse"),
+    approval: document.getElementById("approval"),
+    report: document.getElementById("report")
+};
 
-const item=document.createElement("div");
-item.className="log";
 
-const time=new Date().toLocaleTimeString();
+/* =========================
+   UTILITIES
+========================= */
 
-item.innerHTML=time + " - " + message;
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-logs.prepend(item);
+
+function clearBuildings() {
+
+    Object.values(buildings).forEach(building => {
+        building.classList.remove("running");
+        building.classList.remove("complete");
+    });
 
 }
 
-function sleep(ms){
-return new Promise(resolve=>setTimeout(resolve,ms));
+
+function setRunning(building) {
+
+    clearBuildings();
+
+    building.classList.add("running");
 }
 
-async function runFlow(){
 
-status.innerHTML="T&M Flow Started";
-log("T&M Flow Started");
+function setComplete(building) {
 
-truck.style.left="120px";
+    building.classList.remove("running");
 
-await sleep(2000);
+    building.classList.add("complete");
+}
 
-status.innerHTML="Driving to Warehouse";
-log("Driving to Warehouse");
 
-truck.style.left="500px";
+function log(message, type = "") {
 
-await sleep(3500);
+    const item = document.createElement("div");
 
-status.innerHTML="Loading Materials";
-log("Loading Materials");
+    item.className = "log " + type;
 
-box.style.display="block";
-box.style.left="560px";
-box.style.top="420px";
+    const time = new Date().toLocaleTimeString();
 
-await sleep(2000);
+    item.innerHTML =
+        `<strong>${time}</strong><br>${message}`;
 
-box.style.display="none";
+    logs.prepend(item);
+}
 
-status.innerHTML="Driving to Approval Tower";
-log("Driving to Approval Tower");
 
-truck.style.left="900px";
+function moveTruck(position) {
 
-await sleep(3500);
+    truck.classList.add("moving");
 
-status.innerHTML="Approval Processing";
-log("Approval Processing");
+    truck.style.left = position;
 
-await sleep(2000);
+    return sleep(3500).then(() => {
 
-status.innerHTML="Driving to Report Center";
-log("Driving to Report Center");
+        truck.classList.remove("moving");
 
-truck.style.left="1300px";
+    });
+}
 
-await sleep(3500);
 
-status.innerHTML="Report Delivered ✅";
-log("Report Delivered ✅");
+/* =========================
+   FLOW
+========================= */
 
-await sleep(3000);
+async function runFlow() {
 
-runFlow();
+    if (startButton.disabled) {
+        return;
+    }
+
+    startButton.disabled = true;
+
+    logs.innerHTML = "";
+
+    clearBuildings();
+
+    /* START */
+
+    setRunning(buildings.tm);
+
+    status.innerHTML = "⚡ T&M Flow Running";
+
+    log("T&M Flow triggered", "running");
+
+    await sleep(2000);
+
+    setComplete(buildings.tm);
+
+    log("T&M Flow started successfully", "complete");
+
+
+    /* WAREHOUSE */
+
+    status.innerHTML = "🚚 Driving to Warehouse";
+
+    log("Truck dispatched to Warehouse", "running");
+
+    await moveTruck("450px");
+
+    setRunning(buildings.warehouse);
+
+    status.innerHTML = "🏭 Loading Materials";
+
+    log("Truck arrived at Warehouse", "running");
+
+    await sleep(1000);
+
+
+    /* LOAD CARGO */
+
+    box.style.display = "block";
+
+    box.style.left = "530px";
+    box.style.top = "390px";
+
+    await sleep(500);
+
+    box.classList.add("loading");
+
+    log("Loading materials onto truck", "running");
+
+    await sleep(2000);
+
+    box.classList.remove("loading");
+
+    box.style.display = "none";
+
+    setComplete(buildings.warehouse);
+
+    log("Materials loaded successfully", "complete");
+
+
+    /* APPROVAL */
+
+    status.innerHTML = "🚚 Driving to Approval Tower";
+
+    log("Truck leaving Warehouse", "running");
+
+    await moveTruck("850px");
+
+    setRunning(buildings.approval);
+
+    status.innerHTML = "🛂 Approval Processing";
+
+    log("Approval request submitted", "running");
+
+    await sleep(3000);
+
+    setComplete(buildings.approval);
+
+    log("Approval completed", "complete");
+
+
+    /* REPORT */
+
+    status.innerHTML = "🚚 Driving to Report Center";
+
+    log("Truck transporting approved data", "running");
+
+    await moveTruck("1250px");
+
+    setRunning(buildings.report);
+
+    status.innerHTML = "📊 Generating Report";
+
+    log("Report generation started", "running");
+
+    await sleep(3000);
+
+    setComplete(buildings.report);
+
+    status.innerHTML = "✅ Report Delivered";
+
+    log("Report delivered successfully", "complete");
+
+
+    /* FINISHED */
+
+    await sleep(1000);
+
+    status.innerHTML = "🟢 Flow Completed";
+
+    log("FLOW COMPLETED SUCCESSFULLY", "complete");
+
+    startButton.disabled = false;
 
 }
 
-runFlow();
+
+/* Initial message */
+
+log("Waiting for Power Automate trigger...");
 
 </script>
 
